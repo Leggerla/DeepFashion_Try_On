@@ -63,8 +63,9 @@ def changearm(old_label):
     label=label*(1-arm2)+arm2*4
     label=label*(1-noise)+noise*4
     return label
-os.makedirs('sample',exist_ok=True)
+
 opt = TrainOptions().parse()
+os.makedirs(opt.results_dir,exist_ok=True)
 iter_path = os.path.join(opt.checkpoints_dir, opt.name, 'iter.txt')
 if opt.continue_train:
     try:
@@ -172,11 +173,16 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
 
         
         ### display output images
+        #print (generate_label_plain(input_label).shape, data['label'].shape)
         a = generate_label_color(generate_label_plain(input_label)).float().cuda()
+        a_ = generate_label_color(data['label'])#cv2.cvtColor(data['label'][0, 0, :, :].numpy(),cv2.COLOR_GRAY2RGB)
+        #a_ = #cv2.cvtColor(a_,cv2.COLOR_RGB2BGR)
+        #a_ = #torch.from_numpy(a_).cuda().permute(2, 0, 1)
+        a_ = a_.cuda()
         b = real_image.float().cuda()
         c = fake_image.float().cuda()
         d=torch.cat([clothes_mask,clothes_mask,clothes_mask],1)
-        combine = torch.cat([a[0],d[0],b[0],c[0],rgb[0]], 2).squeeze()
+        combine = torch.cat([a_[0], a[0], d[0],b[0],c[0],rgb[0]], 2).squeeze()
         # combine=c[0].squeeze()
         cv_img=(combine.permute(1,2,0).detach().cpu().numpy()+1)/2
         if step % 1 == 0:
@@ -184,7 +190,7 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
             rgb=(cv_img*255).astype(np.uint8)
             bgr=cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR)
             n=str(step)+'.jpg'
-            cv2.imwrite('sample/'+data['name'][0],bgr)
+            cv2.imwrite(opt.results_dir+data['name'][0],bgr)
         step += 1
         print(step)
         ### save latest model
