@@ -48,7 +48,7 @@ class AlignedDataset(BaseDataset):
             self.E_paths = sorted(make_dataset(self.dir_E))
             self.ER_paths = make_dataset(self.dir_E)
 
-        ### input M (masks)
+        '''### input M (masks)
         if opt.isTrain or opt.use_encoded_image:
             dir_M = '_mask'
             self.dir_M = os.path.join(opt.dataroot, opt.phase + dir_M)
@@ -60,7 +60,7 @@ class AlignedDataset(BaseDataset):
             dir_MC = '_colormask'
             self.dir_MC = os.path.join(opt.dataroot, opt.phase + dir_MC)
             self.MC_paths = sorted(make_dataset(self.dir_MC))
-            self.MCR_paths = make_dataset(self.dir_MC)
+            self.MCR_paths = make_dataset(self.dir_MC)'''
         ### input C(color)
         if opt.isTrain or opt.use_encoded_image:
             dir_C = '_color'
@@ -106,7 +106,7 @@ class AlignedDataset(BaseDataset):
         #     if '000386' in x :
         #         index=k
         #         break
-        test=np.random.randint(2032)
+        test=np.random.randint(len(self.A_paths))
         # for k, s in enumerate(self.B_paths):
         #    if '006581' in s:
         #        test = k
