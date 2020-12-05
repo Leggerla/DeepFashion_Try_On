@@ -106,7 +106,7 @@ class AlignedDataset(BaseDataset):
         #     if '000386' in x :
         #         index=k
         #         break
-        test=np.random.randint(len(self.A_paths))
+        test=np.random.randint(len(self.C_paths))
         # for k, s in enumerate(self.B_paths):
         #    if '006581' in s:
         #        test = k
