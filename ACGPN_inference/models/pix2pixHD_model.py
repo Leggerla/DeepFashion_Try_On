@@ -280,7 +280,7 @@ class Pix2PixHDModel(BaseModel):
         out+=smaller*fake_c
         out+=(1-mask)*fake_img
         return out
-    def forward(self, label, pre_clothes_mask, img_fore, clothes_mask, clothes, all_clothes_label, real_image, pose,grid,mask_fore):
+    def forward(self, label, pre_clothes_mask, img_fore, clothes_mask, clothes, all_clothes_label, real_image, pose,grid,mask_fore, fake_cl):
         # Encode Inputs
         input_label, masked_label, all_clothes_label = self.encode_input(label, clothes_mask, all_clothes_label)
         arm1_mask = torch.FloatTensor((label.cpu().numpy() == 11).astype(np.float)).cuda()
@@ -299,8 +299,8 @@ class Pix2PixHDModel(BaseModel):
         armlabel_map = generate_discrete_label(arm_label.detach(), 14, False)
         dis_label = generate_discrete_label(arm_label.detach(), 14)
         G2_in = torch.cat([pre_clothes_mask, clothes, dis_label,pose,self.gen_noise(shape)], 1)
-        fake_cl = self.G2.refine(G2_in)
-        fake_cl = self.sigmoid(fake_cl)
+        '''fake_cl = self.G2.refine(G2_in)
+        fake_cl = self.sigmoid(fake_cl)'''
         CE_loss += self.BCE(fake_cl, clothes_mask) * 10
 
         fake_cl_dis = torch.FloatTensor((fake_cl.detach().cpu().numpy() > 0.5).astype(np.float)).cuda()
