@@ -12,6 +12,8 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--debug', action='store_true', help='only do one epoch and displays at each iteration')
         self.parser.add_argument('--results_dir', default='sample',
                                  help='where to save processed images')
+        self.parser.add_argument('--generated_mask', required=True,
+                                 help='replace generated mask with this')
 
         # for training
         self.parser.add_argument('--continue_train', action='store_true', help='continue training: load the latest model')
